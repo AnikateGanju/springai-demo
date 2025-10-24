@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/ai_db
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}

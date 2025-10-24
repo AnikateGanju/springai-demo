@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springai-demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: springai-demo
+  template:
+    metadata:
+      labels:
+        app: springai-demo
+    spec:
+      containers:
+        - name: app
+          image: springai-enterprise-demo:1.0.0
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: openai-secret
+                  key: apiKey
+            - name: DB_USER
+              value: ai_user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: password
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: springai-demo
+spec:
+  selector:
+    app: springai-demo
+  ports:
+    - port: 80
+      targetPort: 8080
